@@ -40,12 +40,12 @@ public class AuthorizationServerConfiguration {
     public RegisteredClientRepository registeredClientRepository() {
         // manually registering client
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("client-id")  // client id which is sent when requesting access token
-                .clientSecret(passwordEncoder.encode("client-secret"))  // client secret which is sent when requesting access token; try to encode with Password Encoder
+                .clientId("drivers-id")  // client id which is sent when requesting access token
+                .clientSecret(passwordEncoder.encode("drivers-secret"))  // client secret which is sent when requesting access token; try to encode with Password Encoder
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)  // for BASIC, use Basic auth with clientId and clientSecret values
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)  // for using Authorization Code grant type and "response_type=code"
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://127.0.0.1:8083/login/oauth2/code/users-client-oidc")  // 127.0.0.1:8083 is the address of your client, users-client-oidc is the name of your client (in client's application.yml file)
+                .redirectUri("http://127.0.0.1:8083/login/oauth2/code/drivers-client")  // 127.0.0.1:8083 is the address of your client, drivers-client is the name of your client (in client's application.yml file)
                 .redirectUri("http://127.0.0.1:8083/authorized")
                 .scope(OidcScopes.OPENID)
                 .scope("read")  // custom scope
@@ -56,12 +56,12 @@ public class AuthorizationServerConfiguration {
     }
 
     @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE)
+    @Order(Ordered.HIGHEST_PRECEDENCE)  // this method/bean has the highest priority among all other methods/beans of this type (i.e. over WebSecurityConfiguration/configureSecurityFilterChain)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
         // default security settings; for custom configuration, configure the http object instead of the next line
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
-        return http.formLogin(Customizer.withDefaults()).build();
+        return http.formLogin(Customizer.withDefaults()).build();  // to change login form, replace Customizer with your custom class or a string with the path to the login page
     }
 
     @Bean

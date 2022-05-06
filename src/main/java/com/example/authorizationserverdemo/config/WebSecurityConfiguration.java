@@ -17,7 +17,7 @@ public class WebSecurityConfiguration {
     private CorsConfigurationSource myCorsConfiguration;
 
     @Bean
-    SecurityFilterChain configureSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain configureSecurityFilterChain(HttpSecurity http) throws Exception {
         /*
         Here, we are configuring API protection. We say, "every request should be
         authenticated, except '/docs'"
@@ -29,7 +29,7 @@ public class WebSecurityConfiguration {
 //              or create CSRF token
 //                .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and().authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated())  // request user authentication for all http requests
-                .formLogin(Customizer.withDefaults());  // enabling authentication with login form
+                .formLogin(Customizer.withDefaults());  // enabling authentication with login form; to change login form, replace Customizer with your custom class or a string with the path to the login page
 
         return http.build();
     }
